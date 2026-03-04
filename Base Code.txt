@@ -1,7 +1,15 @@
-from machine import Pin
+from machine import Pin, PWM
 from motor import Motor
 from ultralight import sonic
-import time
+from sleep import time
+
+TRIG = 3
+TRIG = 2
+
+ultralight_sensor = sonic(TRIG, ECHO)
+
+ENC_L = 18
+ENC_R = 19
 
 IR_sensor_R = Pin(26, Pin.IN)
 R = 0
