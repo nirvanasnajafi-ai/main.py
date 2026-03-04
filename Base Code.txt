@@ -1,0 +1,78 @@
+from machine import Pin
+from motor import Motor
+
+import time
+
+IR_sensor_R = Pin(26, Pin.IN)
+R = 0
+IR_sensor_C = Pin(27, Pin.IN)
+C = 0
+IR_sensor_L = Pin(28, Pin.IN)
+L = 0
+
+ldrive = "stop"
+rdrive = "stop"
+direction = "straight"
+lmotor = Motor("left", 8, 9, 6)
+rmotor = Motor("right", 10, 11, 7)
+
+while True:
+    R = IR_sensor_R.value()
+    C = IR_sensor_C.value()
+    L = IR_sensor_L.value()
+    lmotor.set_forwards()
+    rmotor.set_backwards()
+
+#On Line
+    if L == 1 and C == 0 and R ==1:
+        ldrive = "fast"
+        lmotor.duty(60)
+        rdrive = "fast"
+        rmotor.duty(40)
+        direction = "straight"
+#Slow Left
+    elif L == 0 and C == 0 and R == 1:
+        ldrive = "slow"
+        lmotor.duty(60)
+        rdrive = "fast"
+        rmotor.duty(40)
+        direction = "slow left"
+#Hard Left
+    elif L == 0 and C == 1 and R == 1:
+        ldrive = "stop"
+        lmotor.duty(0)
+        rdrive = "fast"
+        rmotor.duty(60)
+        direction = "hard left"
+#Slow Right
+    elif L == 1 and C == 0 and R == 0:
+        ldrive = "fast"
+        lmotor.duty(60)
+        rdrive = "slow"
+        rmotor.duty(40)
+        direction = "slow right"
+#Hard Right
+    elif L == 1 and C == 1 and R == 0:
+        ldrive = "fast"
+        lmotor.duty(60)
+        rdrive = "stop"
+        rmotor.duty(0)
+        direction = "hard right"
+#Line Lost
+    elif L == 1 and C == 1 and R == 1:
+        ldrive = "stop"
+        lmotor.duty(0)
+        rdrive = "stop"
+        rmotor.duty(0)
+        direction = "stopped"
+#All on Line
+    elif L == 0 and C == 0 and R == 0:
+        ldrive = "stop"
+        lmotor.duty(0)
+        rdrive = "stop"
+        rmotor.duty(0)
+        direction = "stopped"
+    
+    print("L", L, "C", C, "R", R, "Direction", direction)
+    
+    time.sleep(0.5)
