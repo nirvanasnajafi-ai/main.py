@@ -1,6 +1,6 @@
 from machine import Pin
 from motor import Motor
-
+from ultralight import sonic
 import time
 
 IR_sensor_R = Pin(26, Pin.IN)
